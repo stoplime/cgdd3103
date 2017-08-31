@@ -18,7 +18,7 @@ public class CameraMovement : MonoBehaviour {
 	void Update () {
 		var parent = gameObject.GetComponentInParent<CharacterMovement>();
 		if (parent != null){
-			yaw = gameObject.GetComponentInParent<CharacterMovement>().yaw;
+			yaw = parent.yaw;
 		}
         pitch -= cameraSpeedV * Input.GetAxis("Mouse Y");
 		transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
