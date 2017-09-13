@@ -14,9 +14,6 @@ public class GuiClass : MonoBehaviour {
         return new Rect(center.x - size.x/2, center.y - size.y/2, size.x, size.y);
     }
 
-    private GameObject gameManager;
-    private GameObject mainCharacter;
-
     private CharacterMovement mainCharacterScript;
 
     void Start()
@@ -24,9 +21,6 @@ public class GuiClass : MonoBehaviour {
         Controls = false;
         screenCenter = new Vector2(Screen.width/2, Screen.height/2);
         controlsMenuSize = new Vector2(Screen.width * 4/5, Screen.height * 4/5);
-        gameManager = GameObject.Find("GameManager");
-        GameManager g = gameManager.GetComponent(typeof(GameManager)) as GameManager;
-        mainCharacter = g.mainCharacter;
     }
 
     void Update()
@@ -41,7 +35,7 @@ public class GuiClass : MonoBehaviour {
             Controls = !Controls;
         }
 
-        mainCharacterScript = mainCharacter.GetComponent(typeof(CharacterMovement)) as CharacterMovement;
+        mainCharacterScript = gameObject.GetComponentInParent<CharacterMovement>();
         mainCharacterScript.MovementLock = Controls;
     }
 
@@ -57,8 +51,16 @@ public class GuiClass : MonoBehaviour {
 
         if (Controls)
         {
-            GUI.Box(GetCenteredRect(screenCenter, controlsMenuSize), "Controls");
-            // GUI.Label();
+            Rect controlsBox = GetCenteredRect(screenCenter, controlsMenuSize);
+            GUI.Box(controlsBox, "Controls");
+            if (GUI.Button(GetCenteredRect(new Vector2(controlsBox.x + controlsMenuSize.x/3, controlsBox.y + controlsMenuSize.y/6), new Vector2(80, 20)), "Profile1"))
+            {
+                mainCharacterScript.Profile = 0;
+            }
+            if (GUI.Button(GetCenteredRect(new Vector2(controlsBox.x + controlsMenuSize.x*2/3, controlsBox.y + controlsMenuSize.y/6), new Vector2(80, 20)), "Profile2"))
+            {
+                mainCharacterScript.Profile = 1;               
+            }
         }
     }
 }

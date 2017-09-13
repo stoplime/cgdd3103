@@ -20,11 +20,6 @@ public class Health : MonoBehaviour {
 		currentBarLength = currentHealth / maximumHealth;
 		transform.LookAt(Camera.main.transform);
 		transform.Rotate(0, 180, 0);
-		// transform.LookAt (new Vector3(-Camera.main.transform.position.x, -Camera.main.transform.position.y, -Camera.main.transform.position.z));
-
-		if (Input.GetAxis("Fire1")>0){
-			currentHealth -= 1f;
-		}
 
 		transform.localScale = Vector3.Lerp(scaleOrg, new Vector3(currentBarLength * scaleOrg.x, scaleOrg.y, scaleOrg.z), Time.fixedTime);
 	}

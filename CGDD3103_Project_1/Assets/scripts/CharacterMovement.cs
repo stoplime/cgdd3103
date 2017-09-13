@@ -31,7 +31,7 @@ public class CharacterMovement : MonoBehaviour {
 
 	private Dictionary<string, KeyCode>[] keyProfile;
 
-	private int profile = 0;
+	public int Profile { get; set; }
 
 	public bool MovementLock{ get; set; }
 
@@ -49,6 +49,7 @@ public class CharacterMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Profile = 0;
 		keyProfile = new Dictionary<string, KeyCode>[2];
 		keyProfile[0] = GameManager.DefaultKeyConfig1;
 		keyProfile[1] = GameManager.DefaultKeyConfig2;
@@ -57,11 +58,11 @@ public class CharacterMovement : MonoBehaviour {
 	void Update () {
 		if (!MovementLock)
 		{
-			if (Input.GetKey(keyProfile[profile]["right"]))
+			if (Input.GetKey(keyProfile[Profile]["right"]))
 			{
 				vel.x = Time.deltaTime * speedH;
 			}
-			else if (Input.GetKey(keyProfile[profile]["left"]))
+			else if (Input.GetKey(keyProfile[Profile]["left"]))
 			{
 				vel.x = -Time.deltaTime * speedH;
 			}
@@ -70,11 +71,11 @@ public class CharacterMovement : MonoBehaviour {
 				vel.x = 0;
 			}
 
-			if (Input.GetKey(keyProfile[profile]["forward"]))
+			if (Input.GetKey(keyProfile[Profile]["forward"]))
 			{
 				vel.z = Time.deltaTime * speedV;
 			}
-			else if (Input.GetKey(keyProfile[profile]["backward"]))
+			else if (Input.GetKey(keyProfile[Profile]["backward"]))
 			{
 				vel.z = -Time.deltaTime * speedV;
 			}

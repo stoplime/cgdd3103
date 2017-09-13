@@ -16,7 +16,7 @@ public class CameraMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		var parent = gameObject.GetComponentInParent<CharacterMovement>();
+		CharacterMovement parent = gameObject.GetComponentInParent<CharacterMovement>();
 		if (parent != null){
 			yaw = parent.Yaw;
 		}

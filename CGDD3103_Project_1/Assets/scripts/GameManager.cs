@@ -24,22 +24,24 @@ public class GameManager : MonoBehaviour {
 		{"backward", KeyCode.S},
 		{"left", KeyCode.A},
 		{"right", KeyCode.D},
+		{"fire", KeyCode.Mouse0}
 	};
 
 	public static Dictionary<string, KeyCode> DefaultKeyConfig2
 	{
 		get
 		{
-			return defaultKeyConfig1;
+			return defaultKeyConfig2;
 		}
 	}
 
 	private static Dictionary<string, KeyCode> defaultKeyConfig2 = new Dictionary<string, KeyCode>()
 	{
-		{"forward", KeyCode.UpArrow},
-		{"backward", KeyCode.DownArrow},
-		{"left", KeyCode.LeftArrow},
-		{"right", KeyCode.RightArrow},
+		{"forward", KeyCode.T},
+		{"backward", KeyCode.G},
+		{"left", KeyCode.F},
+		{"right", KeyCode.H},
+		{"fire", KeyCode.Space}
 	};
 
 	void Awake() {
