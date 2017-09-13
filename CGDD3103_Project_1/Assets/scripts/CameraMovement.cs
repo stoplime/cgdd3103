@@ -20,7 +20,10 @@ public class CameraMovement : MonoBehaviour {
 		if (parent != null){
 			yaw = parent.Yaw;
 		}
-        pitch -= cameraSpeedV * Input.GetAxis("Mouse Y");
-		transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
+		if (!parent.MovementLock)
+		{
+			pitch -= cameraSpeedV * Input.GetAxis("Mouse Y");
+			transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
+		}
 	}
 }

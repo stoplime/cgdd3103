@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour {
 
+	[Tooltip("Max health value")]
+	public float maxHealth = 100;
+
+	[Tooltip("Health value")]
+	public float health = 100;
+
 	[Tooltip("Yaw speen for the player, camera is fixed onto the yaw of the player")]
 	public float cameraSpeedH = 2.0f;
 
@@ -17,6 +23,17 @@ public class CharacterMovement : MonoBehaviour {
 	/// used to keep track of the current yaw value
 	/// </summary>
     private float yaw = 0.0f;
+
+	/// <summary>
+	/// tracks the velocity of the character
+	/// </summary>
+	private Vector3 vel;
+
+	private Dictionary<string, KeyCode>[] keyProfile;
+
+	private int profile = 0;
+
+	public bool MovementLock{ get; set; }
 
 	public float Yaw
 	{
@@ -32,18 +49,46 @@ public class CharacterMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		keyProfile = new Dictionary<string, KeyCode>[2];
+		keyProfile[0] = GameManager.DefaultKeyConfig1;
+		keyProfile[1] = GameManager.DefaultKeyConfig2;
 	}
 	// Update is called once per frame
 	void Update () {
-		float xpos = Input.GetAxis("Horizontal") * Time.deltaTime * speedH;
-		float zpos = Input.GetAxis("Vertical") * Time.deltaTime * speedV;
+		if (!MovementLock)
+		{
+			if (Input.GetKey(keyProfile[profile]["right"]))
+			{
+				vel.x = Time.deltaTime * speedH;
+			}
+			else if (Input.GetKey(keyProfile[profile]["left"]))
+			{
+				vel.x = -Time.deltaTime * speedH;
+			}
+			else
+			{
+				vel.x = 0;
+			}
 
-		transform.Translate(xpos, 0, zpos);
+			if (Input.GetKey(keyProfile[profile]["forward"]))
+			{
+				vel.z = Time.deltaTime * speedV;
+			}
+			else if (Input.GetKey(keyProfile[profile]["backward"]))
+			{
+				vel.z = -Time.deltaTime * speedV;
+			}
+			else
+			{
+				vel.z = 0;
+			}
 
-		yaw += cameraSpeedH * Input.GetAxis("Mouse X");
-		yaw = Help.angleClamp(yaw, true);
+			transform.Translate(vel);
 
-        transform.eulerAngles = new Vector3(0f, yaw, 0.0f);
+			yaw += cameraSpeedH * Input.GetAxis("Mouse X");
+			yaw = Help.angleClamp(yaw, true);
+
+			transform.eulerAngles = new Vector3(0f, yaw, 0.0f);
+		}
 	}
 }
