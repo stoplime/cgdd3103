@@ -4,38 +4,61 @@ using UnityEngine;
 
 public class GuiClass : MonoBehaviour {
 
+    /// <summary>
+    /// Toggle displaying the controls menu
+    /// </summary>
+    /// <returns></returns>
     public bool Controls{ get; set;}
+
+    /// <summary>
+    /// size of the controls menu
+    /// </summary>
     private Vector2 controlsMenuSize;
 
+    /// <summary>
+    /// location of the center of the screen
+    /// </summary>
     private Vector2 screenCenter;
 
+    /// <summary>
+    /// returns a Rect based off the center and size
+    /// </summary>
+    /// <param name="center">center point of the rect</param>
+    /// <param name="size">size of the rect</param>
+    /// <returns>a Rect</returns>
     public static Rect GetCenteredRect(Vector2 center, Vector2 size)
     {
         return new Rect(center.x - size.x/2, center.y - size.y/2, size.x, size.y);
     }
 
-    // private GameManager gmScript;
-
+    /// <summary>
+    /// accessing the main character variables
+    /// </summary>
     private CharacterMovement mainCharacterScript;
 
+    /// <summary>
+    /// list of available controls for keys
+    /// </summary>
     private List<string> keyTable;
 
+    /// <summary>
+    /// list of keys to be displayed in the controls menu
+    /// </summary>
     private List< List<string> > keyDisplays;
 
+    /// <summary>
+    /// flag for when a key change is required, {-1, -1} is the default false state.
+    /// </summary>
     private int[] keyChangeFlag;
-
-    private string keyChangeKey;
 
     void Start()
     {
         keyChangeFlag = new int[2] {-1, -1};
-        keyChangeKey = " ";
         Controls = false;
         screenCenter = new Vector2(Screen.width/2, Screen.height/2);
         controlsMenuSize = new Vector2(Screen.width * 4/5, Screen.height * 4/5);
-
-        // gmScript = GameObject.Find("GameManager").GetComponent<GameManager>();
-
+        
+        // The list of keys for the different types of controls
         keyTable = new List<string>();
         keyTable.Add("forward");
         keyTable.Add("backward");
@@ -44,6 +67,8 @@ public class GuiClass : MonoBehaviour {
         // keyTable.Add("turn");
         keyTable.Add("fire");
 
+        // creates a list of key variables being used as controls
+        // index setup as [profile][key]
         keyDisplays = new List< List<string> >();
         List<string> dispProflie1 = new List<string>();
         List<string> dispProflie2 = new List<string>();
@@ -68,15 +93,17 @@ public class GuiClass : MonoBehaviour {
             Controls = !Controls;
         }
 
+        // accessing variables from the main character
         mainCharacterScript = gameObject.GetComponentInParent<CharacterMovement>();
         mainCharacterScript.MovementLock = Controls;
 
+        // flag checking to see if a change of key is required.
         if (keyChangeFlag[0] != -1 && keyChangeFlag[1] != -1)
         {
             KeyCode keyPressed = GetKeyCode();
             if (keyPressed != KeyCode.None)
             {
-				print(keyPressed.ToString());
+				// print(keyPressed.ToString());
 				mainCharacterScript.setKeyProfile(keyChangeFlag[0], keyTable[keyChangeFlag[1]], keyPressed);
 				keyDisplays[keyChangeFlag[0]][keyChangeFlag[1]] = keyPressed.ToString();
 				keyChangeFlag = new int[2] {-1, -1};
@@ -84,6 +111,10 @@ public class GuiClass : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Finds the key being pressed
+    /// </summary>
+    /// <returns>KeyCode object of pressed key, KeyCode.None if not pressed.</returns>
     public KeyCode GetKeyCode()
     {
         foreach (KeyCode testKey in System.Enum.GetValues(typeof(KeyCode)))
@@ -98,6 +129,7 @@ public class GuiClass : MonoBehaviour {
 
 	void OnGUI () {
         
+        // Top left Health and menu
         GUI.Box(new Rect(10,10,100,90), "Health");
         GUI.Label(new Rect(20,40,80,20), "HP: " + mainCharacterScript.health.ToString() + "/" + mainCharacterScript.maxHealth.ToString());
 
