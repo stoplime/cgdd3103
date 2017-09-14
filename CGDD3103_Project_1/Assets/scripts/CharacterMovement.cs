@@ -47,6 +47,11 @@ public class CharacterMovement : MonoBehaviour {
 		}
 	}
 
+	public string getKeyProfileName(string key)
+	{
+		return keyProfile[Profile][key].ToString();
+	}
+
 	// Use this for initialization
 	void Start () {
 		Profile = 0;
