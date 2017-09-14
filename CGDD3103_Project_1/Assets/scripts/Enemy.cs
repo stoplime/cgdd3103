@@ -34,9 +34,9 @@ public class Enemy : MonoBehaviour {
 
 	public float maxHealth = 100f;
 
-	public float healingTime = 20;
+	public float healingTime = 10;
 
-	public float healingAmount = 10f;
+	public float healingAmount = 20f;
 
 	public float speed;
 

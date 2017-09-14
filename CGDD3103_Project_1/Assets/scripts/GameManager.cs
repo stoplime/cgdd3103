@@ -4,11 +4,18 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+	[Tooltip("Main Character Object")]
 	public GameObject mainCharacter;
 
+	[Tooltip("A list containing the set of enemy GameObjects")]
 	public List<GameObject> enemies;
 
 	private List<GameObject> projectiles;
+
+	public void AddProjectile(GameObject obj)
+	{
+		projectiles.Add(obj);
+	}
 
 	public static Dictionary<string, KeyCode> DefaultKeyConfig1
 	{
@@ -44,13 +51,14 @@ public class GameManager : MonoBehaviour {
 		{"fire", KeyCode.Space}
 	};
 
-	void Awake() {
-		mainCharacter = GameObject.Find("MainCharacter");
+	void Awake() 
+	{
+
 	}
 
 	// Use this for initialization
 	void Start () {
-		
+		projectiles = new List<GameObject>();
 	}
 
 	void Update () {

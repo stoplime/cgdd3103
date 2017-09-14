@@ -19,6 +19,9 @@ public class CharacterMovement : MonoBehaviour {
 	[Tooltip("Speed for forward and backward motion.")]
     public float speedV = 2.0f;
 
+	[Tooltip("Speed for projectiles.")]
+    public float projectileSpeed = 20.0f;
+
 	/// <summary>
 	/// used to keep track of the current yaw value
 	/// </summary>
@@ -34,6 +37,8 @@ public class CharacterMovement : MonoBehaviour {
 	public int Profile { get; set; }
 
 	public bool MovementLock{ get; set; }
+	
+    public Rigidbody projectile;
 
 	public float Yaw
 	{
@@ -47,11 +52,12 @@ public class CharacterMovement : MonoBehaviour {
 		}
 	}
 
-	public string getKeyProfileName(string key)
-	{
-		return keyProfile[Profile][key].ToString();
-	}
-
+	/// <summary>
+	/// sets the keycode of a given profile and key
+	/// </summary>
+	/// <param name="profile"></param>
+	/// <param name="key"></param>
+	/// <param name="code"></param>
 	public void setKeyProfile(int profile, string key, KeyCode code)
 	{
 		if (profile < keyProfile.Length && profile >= 0)
@@ -62,11 +68,12 @@ public class CharacterMovement : MonoBehaviour {
 			}
 		}
 	}
-	public void setKeyProfile(string key, KeyCode code)
+
+	void OnCollisionEnter(Collision col)
 	{
-		if (keyProfile[Profile].ContainsKey(key))
+		if (col.gameObject.tag == "Enemy")
 		{
-			keyProfile[Profile][key] = code;
+			health -= 5;
 		}
 	}
 
@@ -105,6 +112,15 @@ public class CharacterMovement : MonoBehaviour {
 			else
 			{
 				vel.z = 0;
+			}
+
+			// firing action
+			if (Input.GetKeyDown(keyProfile[Profile]["fire"]))
+			{
+				Rigidbody clone;
+				clone = Instantiate(projectile, transform.position + transform.rotation * new Vector3(0,0,1), transform.rotation) as Rigidbody;
+				clone.transform.Rotate(90, 0, 0);
+				clone.velocity = transform.TransformDirection(Vector3.forward * projectileSpeed);
 			}
 
 			transform.Translate(vel);
