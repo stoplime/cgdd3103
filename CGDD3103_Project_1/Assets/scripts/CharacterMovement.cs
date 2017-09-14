@@ -22,6 +22,31 @@ public class CharacterMovement : MonoBehaviour {
 	[Tooltip("Speed for projectiles.")]
     public float projectileSpeed = 20.0f;
 
+	public float regenAmount = 2f;
+
+	public float Health
+	{
+		get
+		{
+			return health;
+		}
+		set
+		{
+			if (value >= 0 && value <= maxHealth)
+			{
+				health = value;
+			}
+			else if(value > maxHealth)
+			{
+				health = maxHealth;
+			}
+			else
+			{
+				health = 0;
+			}
+		}
+	}
+
 	/// <summary>
 	/// used to keep track of the current yaw value
 	/// </summary>
@@ -33,6 +58,10 @@ public class CharacterMovement : MonoBehaviour {
 	private Vector3 vel;
 
 	private Dictionary<string, KeyCode>[] keyProfile;
+
+	public float regenTime = 10;
+
+	private float timer;
 
 	public int Profile { get; set; }
 
@@ -73,12 +102,14 @@ public class CharacterMovement : MonoBehaviour {
 	{
 		if (col.gameObject.tag == "Enemy")
 		{
-			health -= 5;
+			Health = health - 5;
+			timer = regenTime;
 		}
 	}
 
 	// Use this for initialization
 	void Start () {
+		timer = regenTime;
 		Profile = 0;
 		keyProfile = new Dictionary<string, KeyCode>[2];
 		keyProfile[0] = GameManager.DefaultKeyConfig1;
@@ -121,6 +152,16 @@ public class CharacterMovement : MonoBehaviour {
 				clone = Instantiate(projectile, transform.position + transform.rotation * new Vector3(0,0,1), transform.rotation) as Rigidbody;
 				clone.transform.Rotate(90, 0, 0);
 				clone.velocity = transform.TransformDirection(Vector3.forward * projectileSpeed);
+			}
+
+			timer -= Time.deltaTime;
+			if (health < maxHealth)
+			{
+				if (timer <= 0)
+				{
+					Health = health + regenAmount;
+					timer = regenTime;	
+				}
 			}
 
 			transform.Translate(vel);
