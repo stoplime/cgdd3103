@@ -26,11 +26,8 @@ public class GuiClass : MonoBehaviour {
 
     private string keyChangeKey;
 
-    private KeyCode changedKeyCode;
-
     void Start()
     {
-        changedKeyCode = KeyCode.None;
         keyChangeFlag = new int[2] {-1, -1};
         keyChangeKey = " ";
         Controls = false;
@@ -76,54 +73,26 @@ public class GuiClass : MonoBehaviour {
 
         if (keyChangeFlag[0] != -1 && keyChangeFlag[1] != -1)
         {
-            KeyCode keyPressed = GetKeyCode(Event.current);
+            KeyCode keyPressed = GetKeyCode();
             if (keyPressed != KeyCode.None)
             {
-                changedKeyCode = keyPressed;
+				print(keyPressed.ToString());
+				mainCharacterScript.setKeyProfile(keyChangeFlag[0], keyTable[keyChangeFlag[1]], keyPressed);
+				keyDisplays[keyChangeFlag[0]][keyChangeFlag[1]] = keyPressed.ToString();
+				keyChangeFlag = new int[2] {-1, -1};
             }
         }
     }
 
-    public KeyCode GetKeyCode(Event e)
+    public KeyCode GetKeyCode()
     {
-        if (e == null)
-        {
-            return KeyCode.None;
-        }
-        if (e.isKey && e.keyCode != KeyCode.None) { return e.keyCode; }
-        if (e.isMouse) { return KeyCode.Mouse0 + e.button; }
-        if (e.shift)
-        {
-            if (Input.GetKey(KeyCode.RightShift)) { return KeyCode.RightShift; }
-            else { return KeyCode.LeftShift; }
-        }
-        if (e.alt)
-        {
-            if (Input.GetKey(KeyCode.RightAlt)) { return KeyCode.RightAlt; }
-            else if (Input.GetKey(KeyCode.LeftAlt)) { return KeyCode.LeftAlt; }
-            else { return KeyCode.AltGr; }
-        }
-        if (e.control)
-        {
-            if (Input.GetKey(KeyCode.RightControl)) { return KeyCode.RightControl; }
-            else { return KeyCode.LeftControl; }
-        }
-        for (int i = 0; i < 20; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                if (j > 0)
-                {
-                    if (Input.GetKey("joystick " + j + " button " + i))
-                    { return KeyCode.Joystick1Button0 + i + (j * 20); }
-                }
-                else
-                {
-                    if (Input.GetKey("joystick button " + i))
-                    { return KeyCode.Joystick1Button0 + i + (j * 20); }
-                }
-            }
-        }
+        foreach (KeyCode testKey in System.Enum.GetValues(typeof(KeyCode)))
+		{
+			if (Input.GetKeyDown(testKey))
+			{
+				return testKey;
+			}
+		}
         return KeyCode.None;
     }
 
@@ -139,8 +108,22 @@ public class GuiClass : MonoBehaviour {
 
         if (Controls)
         {
+			// helper rect
             Rect controlsBox = GetCenteredRect(screenCenter, controlsMenuSize);
+			// draws the main controls box
             GUI.Box(controlsBox, "Controls");
+
+			// draws selected profile box
+			if (mainCharacterScript.Profile == 0)
+			{
+				GUI.Box(GetCenteredRect(new Vector2(controlsBox.x + controlsMenuSize.x/3, screenCenter.y), new Vector2(controlsMenuSize.x/4, controlsMenuSize.y*7/8)), "Selected Profile");
+			}
+			else if (mainCharacterScript.Profile == 1)
+			{
+				GUI.Box(GetCenteredRect(new Vector2(controlsBox.x + controlsMenuSize.x*2/3, screenCenter.y), new Vector2(controlsMenuSize.x/4, controlsMenuSize.y*7/8)), "Selected Profile");
+			}
+
+			// profile buttons
             if (GUI.Button(GetCenteredRect(new Vector2(controlsBox.x + controlsMenuSize.x/3, controlsBox.y + controlsMenuSize.y/6), new Vector2(80, 20)), "Profile1"))
             {
                 mainCharacterScript.Profile = 0;
@@ -149,11 +132,14 @@ public class GuiClass : MonoBehaviour {
             {
                 mainCharacterScript.Profile = 1;               
             }
+
+			// creates the labels for each type of key
             for (int i = 0; i < keyTable.Count; i++)
             {
                 GUI.Label(GetCenteredRect(new Vector2(controlsBox.x + controlsMenuSize.x/6, controlsBox.y + controlsMenuSize.y/6 + (i+1)*40), new Vector2(80, 20)), keyTable[i]);
             }
-
+			
+			// draws the buttons for each key for two profiles
             for (int i = 0; i < keyDisplays.Count; i++) // i == 0 is profile1; i == 1 is profile2
             {
                 for (int j = 0; j < keyDisplays[i].Count; j++)

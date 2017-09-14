@@ -52,6 +52,24 @@ public class CharacterMovement : MonoBehaviour {
 		return keyProfile[Profile][key].ToString();
 	}
 
+	public void setKeyProfile(int profile, string key, KeyCode code)
+	{
+		if (profile < keyProfile.Length && profile >= 0)
+		{
+			if (keyProfile[profile].ContainsKey(key))
+			{
+				keyProfile[profile][key] = code;
+			}
+		}
+	}
+	public void setKeyProfile(string key, KeyCode code)
+	{
+		if (keyProfile[Profile].ContainsKey(key))
+		{
+			keyProfile[Profile][key] = code;
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 		Profile = 0;
