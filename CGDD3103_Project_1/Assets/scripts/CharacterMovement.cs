@@ -153,7 +153,7 @@ public class CharacterMovement : MonoBehaviour {
 				Vector3 trajection = Camera.main.transform.rotation * Vector3.forward;
 				// clone.transform.LookAt(Camera.main.transform);
 				clone.transform.Rotate(90, 0, 0);
-				clone.velocity = transform.TransformDirection(trajection * projectileSpeed);
+				clone.velocity = transform.TransformDirection(Vector3.forward * projectileSpeed);
 			}
 
 			timer -= Time.deltaTime;
