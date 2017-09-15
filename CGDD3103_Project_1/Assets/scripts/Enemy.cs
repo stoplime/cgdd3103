@@ -68,6 +68,7 @@ public class Enemy : MonoBehaviour {
 		{
 			Destroy(gameObject);
 		}
+		transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 	}
 
 

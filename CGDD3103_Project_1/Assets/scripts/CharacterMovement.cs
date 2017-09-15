@@ -149,9 +149,11 @@ public class CharacterMovement : MonoBehaviour {
 			if (Input.GetKeyDown(keyProfile[Profile]["fire"]))
 			{
 				Rigidbody clone;
-				clone = Instantiate(projectile, transform.position + transform.rotation * new Vector3(0,0,1), transform.rotation) as Rigidbody;
+				clone = Instantiate(projectile, transform.position + transform.rotation * Vector3.forward, Camera.main.transform.rotation) as Rigidbody;
+				Vector3 trajection = Camera.main.transform.rotation * Vector3.forward;
+				// clone.transform.LookAt(Camera.main.transform);
 				clone.transform.Rotate(90, 0, 0);
-				clone.velocity = transform.TransformDirection(Vector3.forward * projectileSpeed);
+				clone.velocity = transform.TransformDirection(trajection * projectileSpeed);
 			}
 
 			timer -= Time.deltaTime;
