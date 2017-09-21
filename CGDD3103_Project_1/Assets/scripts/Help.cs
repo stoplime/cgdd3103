@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class Help {
+
+	public static bool isPause;
+
 	/// <summary>
 	/// float version of PI.
 	/// </summary>

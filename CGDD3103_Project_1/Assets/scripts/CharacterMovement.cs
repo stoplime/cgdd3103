@@ -61,13 +61,15 @@ public class CharacterMovement : MonoBehaviour {
 
 	public float regenTime = 10;
 
-	private float timer;
+	public float timer;
 
 	public int Profile { get; set; }
 
-	public bool MovementLock{ get; set; }
-	
     public Rigidbody projectile;
+
+    public Rigidbody projectile2;
+
+	public float RareProjectileProb;
 
 	public float Yaw
 	{
@@ -109,6 +111,8 @@ public class CharacterMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Cursor.lockState = CursorLockMode.Locked;
+		Help.isPause = false;
 		timer = regenTime;
 		Profile = 0;
 		keyProfile = new Dictionary<string, KeyCode>[2];
@@ -117,8 +121,10 @@ public class CharacterMovement : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		if (!MovementLock)
+		if (!Help.isPause)
 		{
+			Cursor.lockState = CursorLockMode.Locked;
+
 			if (Input.GetKey(keyProfile[Profile]["right"]))
 			{
 				vel.x = Time.deltaTime * speedH;
@@ -149,7 +155,14 @@ public class CharacterMovement : MonoBehaviour {
 			if (Input.GetKeyDown(keyProfile[Profile]["fire"]))
 			{
 				Rigidbody clone;
-				clone = Instantiate(projectile, transform.position + transform.rotation * Vector3.forward, Camera.main.transform.rotation) as Rigidbody;
+				if (RareProjectileProb < Random.value)
+				{
+					clone = Instantiate(projectile, transform.position + transform.rotation * Vector3.forward, Camera.main.transform.rotation) as Rigidbody;
+				}
+				else
+				{
+					clone = Instantiate(projectile2, transform.position + transform.rotation * Vector3.forward, Camera.main.transform.rotation) as Rigidbody;
+				}
 				Vector3 trajection = Camera.main.transform.rotation * Vector3.forward;
 				// clone.transform.LookAt(Camera.main.transform);
 				clone.transform.Rotate(90, 0, 0);
@@ -172,6 +185,9 @@ public class CharacterMovement : MonoBehaviour {
 			yaw = Help.angleClamp(yaw, true);
 
 			transform.eulerAngles = new Vector3(0f, yaw, 0.0f);
+		}
+		else{
+			Cursor.lockState = CursorLockMode.None;
 		}
 	}
 }
