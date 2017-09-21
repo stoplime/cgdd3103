@@ -2,10 +2,10 @@
 ### by: Steffen Lim
 
 ## How To Play
-'WSAD' to move around.
-Left mouse button to shoot.
-'ESC' to open the controls menu.
-Orange cubes are the enemy and you must kill them all.
+'WSAD' to move around.  
+Left mouse button to shoot.  
+'ESC' to open the controls menu.  
+Orange cubes are the enemy and you must kill them all.  
 
 ## Project Requirements
 1. Using only the Main Camera to create a first person walking environment. Do not import Unity FPS package. You have to write your own script to control the Main Camera. Make sure you can use "WSAD" to walk in the gallery forward, back, left, right, use the mouse to change the walking direction and looking around. (10%)
@@ -22,11 +22,11 @@ Orange cubes are the enemy and you must kill them all.
 ## Project Implementation
 
 ### 1. First Person Camera
-Using a character Cube, the main camera follows the position and yaw of the character. The Camera then has a separate pitch controller script that allows the mouse to control virtical movement of the camera.
+Using a character Cube, the main camera follows the position and yaw of the character. The Camera then has a separate pitch controller script that allows the mouse to control the vertical movement of the camera.
 Controls for movement of the Character can be defaulted to control with "WSAD" which changes both the main character and the camera.
 
 ### 2. Separate Control Profile
-A control profile system is implemented using a togglable profile buttons in the control menu. This allows the player to toggle between two separate control scemes. Although the requirements specify that the Left and Right arrows be allowed to control the Yaw control of the character, I did not like the disoriented feeling for both acting mouse and keyboard control of the system.
+A control profile system is implemented using a togglable profile buttons in the control menu. This allows the player to toggle between two separate control schemes. Although the requirements specify that the Left and Right arrows be allowed to control the Yaw control of the character, I did not like the disoriented feeling for both acting mouse and keyboard control of the system.
 
 ### 3. GUI for Character Health
 A display screen on the top left of the game displays the current health and maximum health of the character. The maximum health and starting health is set at default to 100.
@@ -38,13 +38,13 @@ The control menu allows the player to switch between the two control profiles.
 Each displayed button in the control menu can change keys. If a button is pressed, the next key pressed will be the assigned key for the control.
 
 ### 6. Enemy Cube
-The enemy cube has it's own health system which is displayed above the enemy. If the Player were to walk into the enemy, the player will lose 5 points of health.
+The enemy cube has its own health system which is displayed above the enemy. If the Player were to walk into the enemy, the player will lose 5 points of health.
 
 ### 7. Player Health Regen
 The player has a Regen ability to gain two points of health every ten seconds. If the player takes damage, the player's regen timer will reset to the original ten seconds.
 
-### 8. Player Prijectiles
-The player can shoot two types of projectiles at random. The smaller projectile will deal 10 points of damage onto the Enemy if it hits. The larger projectile will deal 20 points of damage onto the Enemy if it hits. Both projectiles will despawn if the projectile did not colide with an Enemy within 5 seconds.
+### 8. Player Projectiles
+The player can shoot two types of projectiles at random. The smaller projectile will deal 10 points of damage onto the Enemy if it hits. The larger projectile will deal 20 points of damage onto the Enemy if it hits. Both projectiles will despawn if the projectile did not collide with an Enemy within 5 seconds.
 
 ### 9. Enemy takes Damage
 The Enemy displays the damage it took by decreasing its health bar. If the enemy health is less than or equal to zero than the enemy will die.
