@@ -23,6 +23,13 @@ public class CameraMovement : MonoBehaviour {
 		if (!Help.isPause)
 		{
 			pitch -= cameraSpeedV * Input.GetAxis("Mouse Y");
+			if(pitch > 90){
+				pitch = 90;
+			}
+			else if (pitch < -90)
+			{
+				pitch = -90;
+			}
 			transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
 		}
 	}

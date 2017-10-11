@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour {
+	const float PI = 3.1415926f;
 
 	[Tooltip("Max health value")]
 	public float maxHealth = 100;
@@ -157,16 +158,15 @@ public class CharacterMovement : MonoBehaviour {
 				Rigidbody clone;
 				if (RareProjectileProb < Random.value)
 				{
-					clone = Instantiate(projectile, transform.position + transform.rotation * Vector3.forward, Camera.main.transform.rotation) as Rigidbody;
+					clone = Instantiate(projectile, transform.position + Camera.main.transform.forward * 1.5f, Camera.main.transform.rotation) as Rigidbody;
 				}
 				else
 				{
-					clone = Instantiate(projectile2, transform.position + transform.rotation * Vector3.forward, Camera.main.transform.rotation) as Rigidbody;
+					clone = Instantiate(projectile2, transform.position + Camera.main.transform.forward * 1.5f, Camera.main.transform.rotation) as Rigidbody;
 				}
-				// Vector3 trajection = Camera.main.transform.rotation * Vector3.forward;
-				// clone.transform.LookAt(Camera.main.transform);
+				clone.transform.rotation = Camera.main.transform.rotation;
 				clone.transform.Rotate(90, 0, 0);
-				clone.velocity = transform.TransformDirection(Vector3.forward * projectileSpeed);
+				clone.velocity = Camera.main.transform.forward * projectileSpeed;
 			}
 
 			timer -= Time.deltaTime;

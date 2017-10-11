@@ -6,6 +6,8 @@ public class Sun : MonoBehaviour {
 
 	public Transform target;
 
+	public float speed = 1;
+
 	public float time;
 
 	private float sunTime;
@@ -28,7 +30,7 @@ public class Sun : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		time += Time.deltaTime;
-		sunTime = time*PI/12f;
+		sunTime = time*PI/12f*speed*(1/60f);
 		sunRotation = new Vector2(Mathf.Cos(sunTime), Mathf.Sin(sunTime)) * runRadius;
 
 		transform.position = new Vector3(xOffset, sunRotation.y, sunRotation.x);
