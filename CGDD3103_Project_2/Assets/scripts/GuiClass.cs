@@ -8,7 +8,7 @@ public class GuiClass : MonoBehaviour {
     /// Toggle displaying the controls menu
     /// </summary>
     /// <returns></returns>
-    public bool Controls{ get; set;}
+    public static bool Controls{ get; set;}
 
     /// <summary>
     /// size of the controls menu
@@ -95,7 +95,7 @@ public class GuiClass : MonoBehaviour {
 
         // accessing variables from the main character
         mainCharacterScript = gameObject.GetComponentInParent<CharacterMovement>();
-        Help.isPause = Controls;
+        // Help.isPause = Controls;
 
         // flag checking to see if a change of key is required.
         if (keyChangeFlag[0] != -1 && keyChangeFlag[1] != -1)
