@@ -139,10 +139,10 @@ public class Inventory : MonoBehaviour {
         menuSize = new Vector2(Screen.width * 4/5, Screen.height * 4/5);
 
 		// toggle the Inventory menu
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            OpenInventoryToggle = !OpenInventoryToggle;
-        }
+        // if (Input.GetKeyDown(KeyCode.E))
+        // {
+        //     OpenInventoryToggle = !OpenInventoryToggle;
+        // }
 
 		// closes the menu if the main menu is open
 		if (GuiClass.Controls)

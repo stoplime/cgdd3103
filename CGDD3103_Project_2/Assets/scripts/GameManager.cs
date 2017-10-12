@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour {
 		{"backward", KeyCode.S},
 		{"left", KeyCode.A},
 		{"right", KeyCode.D},
+		{"jump", KeyCode.Space},
+		{"inventory", KeyCode.E},
 		{"fire", KeyCode.Mouse0}
 	};
 
@@ -44,10 +46,12 @@ public class GameManager : MonoBehaviour {
 
 	private static Dictionary<string, KeyCode> defaultKeyConfig2 = new Dictionary<string, KeyCode>()
 	{
-		{"forward", KeyCode.T},
-		{"backward", KeyCode.G},
-		{"left", KeyCode.F},
-		{"right", KeyCode.H},
+		{"forward", KeyCode.UpArrow},
+		{"backward", KeyCode.DownArrow},
+		{"left", KeyCode.LeftArrow},
+		{"right", KeyCode.RightArrow},
+		{"jump", KeyCode.Keypad0},
+		{"inventory", KeyCode.I},
 		{"fire", KeyCode.Space}
 	};
 

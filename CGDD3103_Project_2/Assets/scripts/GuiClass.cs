@@ -60,12 +60,10 @@ public class GuiClass : MonoBehaviour {
         
         // The list of keys for the different types of controls
         keyTable = new List<string>();
-        keyTable.Add("forward");
-        keyTable.Add("backward");
-        keyTable.Add("left");
-        keyTable.Add("right");
-        // keyTable.Add("turn");
-        keyTable.Add("fire");
+        foreach (KeyValuePair<string, KeyCode> pair in GameManager.DefaultKeyConfig1)
+        {
+            keyTable.Add(pair.Key);
+        }
 
         // creates a list of key variables being used as controls
         // index setup as [profile][key]

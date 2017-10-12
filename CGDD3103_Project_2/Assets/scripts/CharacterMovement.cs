@@ -72,6 +72,10 @@ public class CharacterMovement : MonoBehaviour {
 
 	public float RareProjectileProb;
 
+	private bool grounded = false;
+	Rigidbody rb;
+	public float jumpForce = 5f;
+
 	public float Yaw
 	{
 		get
@@ -110,6 +114,14 @@ public class CharacterMovement : MonoBehaviour {
 		}
 	}
 
+	void OnCollisionStay(Collision col)
+	{
+		if (col.gameObject.tag == "Ground")
+		{
+			grounded = true;
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 		Cursor.lockState = CursorLockMode.Locked;
@@ -119,9 +131,17 @@ public class CharacterMovement : MonoBehaviour {
 		keyProfile = new Dictionary<string, KeyCode>[2];
 		keyProfile[0] = GameManager.DefaultKeyConfig1;
 		keyProfile[1] = GameManager.DefaultKeyConfig2;
+		rb = GetComponent<Rigidbody>();
 	}
 	// Update is called once per frame
 	void Update () {
+		
+		if (Input.GetKeyDown(keyProfile[Profile]["inventory"]))
+		{
+			Inventory inv = GetComponentsInParent<Inventory>()[0];
+			inv.OpenInventoryToggle = !inv.OpenInventoryToggle;
+		}
+
 		if (!Help.isPause)
 		{
 			Cursor.lockState = CursorLockMode.Locked;
@@ -150,6 +170,15 @@ public class CharacterMovement : MonoBehaviour {
 			else
 			{
 				vel.z = 0;
+			}
+
+			if (Input.GetKeyDown(keyProfile[Profile]["jump"]))
+			{
+				if (grounded)
+				{
+					rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+					grounded = false;
+				}
 			}
 
 			// firing action
