@@ -15,6 +15,8 @@ public class Inventory : MonoBehaviour {
 	/// </summary>
 	private List< List<int> > inv;
 
+	private List<int> hotbar;
+
 	private Vector2 screenCenter;
 	private Vector2 menuSize;
 	private int margin;
@@ -130,6 +132,11 @@ public class Inventory : MonoBehaviour {
 		}
 		margin = 15;
 		itemSize = new Vector2(64, 64);
+		hotbar = new List<int>();
+		for (int i = 0; i < HotBarSlots; i++)
+		{
+			hotbar.Add(i); // The index of an inventory slot
+		}
 	}
 	
 	// Update is called once per frame
@@ -151,6 +158,12 @@ public class Inventory : MonoBehaviour {
 		}
 
 		Help.isPause = OpenInventoryToggle || GuiClass.Controls;
+	}
+
+	public delegate void Func<in T>(T arg);
+	private void DrawInventoryItems(Rect box, float margin, Vector2 itemSize, Func<bool> clicked)
+	{
+
 	}
 
 	void OnGUI () {
@@ -193,8 +206,31 @@ public class Inventory : MonoBehaviour {
 			}
 
 			// Draw the hotbar inside the inventory menu
-            GUI.Box(GuiClass.GetCenteredRect(new Vector2(screenCenter.x, screenCenter.y + menuSize.y * 5/16), new Vector2(menuSize.x - (margin*2), menuSize.y * 3f/12)), "Hotbar");
-			
+			Vector2 hotbarSize = new Vector2(menuSize.x - (margin*2), menuSize.y * 3f/12);
+			Rect hotbarRect = GuiClass.GetCenteredRect(new Vector2(screenCenter.x, screenCenter.y + menuSize.y * 5/16), hotbarSize);
+            GUI.Box(hotbarRect, "Hotbar");
+
+			itemsBound = new Vector2(hotbarSize.x - (margin*2) - itemSize.x, hotbarSize.y - (margin*2) - itemSize.y);
+			itemsTopLeft = new Vector2(screenCenter.x - ((itemSize.x + margin) * HotBarSlots/2f) + (itemSize.x + margin)/2, hotbarRect.y + hotbarSize.y - margin - itemSize.y/2);
+			for (int i = 0; i < hotbar.Count; i++)
+			{
+				float verticalShift = (itemSize.y+margin)*(int)((float)i/(horizontalShift));
+				Vector2 itemLocation = new Vector2(itemsTopLeft.x + (i%horizontalShift)*(itemSize.x+margin), itemsTopLeft.y + verticalShift);
+				if (inv[hotbar[i]][0] != -1)
+				{
+					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), i.ToString()))
+					{
+						
+					}
+				}
+				else
+				{
+					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), ""))
+					{
+						
+					}
+				}
+			}
 		}
 		else if(!GuiClass.Controls)
 		{

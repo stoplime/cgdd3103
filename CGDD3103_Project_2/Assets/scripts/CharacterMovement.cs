@@ -212,11 +212,11 @@ public class CharacterMovement : MonoBehaviour {
 
 			yaw += cameraSpeedH * Input.GetAxis("Mouse X");
 			yaw = Help.angleClamp(yaw, true);
-
-			transform.eulerAngles = new Vector3(0f, yaw, 0.0f);
 		}
 		else{
 			Cursor.lockState = CursorLockMode.None;
+			transform.Translate(Vector3.zero);
 		}
+		transform.eulerAngles = new Vector3(0f, yaw, 0.0f);
 	}
 }
