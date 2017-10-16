@@ -195,6 +195,7 @@ public class CharacterMovement : MonoBehaviour {
 				}
 				clone.transform.rotation = Camera.main.transform.rotation;
 				clone.transform.Rotate(90, 0, 0);
+				// clone.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * projectileSpeed);
 				clone.velocity = Camera.main.transform.forward * projectileSpeed;
 			}
 
