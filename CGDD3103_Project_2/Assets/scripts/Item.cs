@@ -20,9 +20,10 @@ public class Item : MonoBehaviour {
 
     private Inventory inventory;
 
-    public virtual void Drag()
+    public void Drag()
     {
-        pos = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse X"));
+        // pos += deltaPos;
+        pos = new Vector2(Input.mousePosition.x, Screen.height-Input.mousePosition.y);
 
         if(Input.GetKeyUp(KeyCode.Mouse0))
         {
@@ -33,11 +34,12 @@ public class Item : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		inventory = player.GetComponent<Inventory>();
-        size = new Vector2(32, 32);
+        pos = new Vector2(Input.mousePosition.x, Screen.height-Input.mousePosition.y);
 	}
 	
 	// Update is called once per frame
     void OnGUI () {
-        GUI.DrawTexture(new Rect(pos.x-size.x/2, pos.y-size.y/2, size.x, size.y), sprite, ScaleMode.ScaleToFit, true, 10.0F, Color.green, 0, 1);
+        GUI.depth = -1;
+        GUI.DrawTexture(GuiClass.GetCenteredRect(pos, size), sprite, ScaleMode.StretchToFill, true, 10.0F, Color.green, 0, 1);
     }
 }

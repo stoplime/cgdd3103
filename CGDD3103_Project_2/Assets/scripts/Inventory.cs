@@ -29,6 +29,8 @@ public class Inventory : MonoBehaviour {
 
 	private GUIStyle inventoryStyle = null;
 
+	private int dragItem = -1;
+
 	private void addEmptyInventory()
 	{
 		inv.Add(new List<int>());
@@ -97,7 +99,7 @@ public class Inventory : MonoBehaviour {
 			if(inv[i][0] == -1){
 				inv[i][0] = ID;
 				inv[i][1] = 1;
-				// addItemSprite(ID);
+				addItemSprite(ID);
 				return true;
 			}
 		}
@@ -107,7 +109,7 @@ public class Inventory : MonoBehaviour {
 			addEmptyInventory();
 			inv[inv.Count-1][0] = ID;
 			inv[inv.Count-1][0] = 1;
-			// addItemSprite(ID);
+			addItemSprite(ID);
 			return true;
 		}
 		return false;
@@ -156,6 +158,7 @@ public class Inventory : MonoBehaviour {
 		{
 			hotbar.Add(i); // The index of an inventory slot
 		}
+		itemSprites = new List<Item>();
 	}
 	
 	// Update is called once per frame
@@ -204,25 +207,56 @@ public class Inventory : MonoBehaviour {
 			Vector2 itemsTopLeft = new Vector2(internalInventoryRect.x + margin + itemSize.x/2, internalInventoryRect.y + margin + itemSize.y/2);
 			int horizontalShift = (int)(itemsBound.x / (itemSize.x+margin)) + 1;
 			// print(horizontalShift);
+			if (!Input.GetKey(KeyCode.Mouse0))
+			{
+				dragItem = -1;
+			}
 			for (int i = 0; i < inv.Count; i++)
 			{
 				float verticalShift = (itemSize.y+margin)*(int)((float)i/(horizontalShift));
 				Vector2 itemLocation = new Vector2(itemsTopLeft.x + (i%horizontalShift)*(itemSize.x+margin), itemsTopLeft.y + verticalShift);
+				
+				Rect buttonRect = GuiClass.GetCenteredRect(itemLocation, itemSize);
+				// Rect itemRect = buttonRect;
+
+				Vector2 mousePos = new Vector2(Input.mousePosition.x, Screen.height-Input.mousePosition.y);
+				if(buttonRect.Contains(mousePos) && Input.GetKey(KeyCode.Mouse0) && dragItem == -1)
+				{
+					dragItem = i;
+				}
+
+				// checks if item exists
 				if (inv[i][0] != -1)
 				{
-					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), inv[i][0].ToString()+","+inv[i][1].ToString()))
+					// string itemString = inv[i][0].ToString()+","+inv[i][1].ToString();
+					string itemString = "";
+
+					if(dragItem == i)
 					{
-						itemSprites[i].Drag();
+						itemSprites[i].pos = mousePos;
+						// buttonRect.center = mousePos;
+					}
+					else
+					{
+						itemSprites[i].pos = buttonRect.center;
+					}
+
+					// draw button that exists
+					if (GUI.Button(buttonRect, itemString))
+					{
+						
 					}
 				}
 				else
 				{
-					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), ""))
+					// draw button that doesn't exist
+					if (GUI.Button(buttonRect, ""))
 					{
 						
 					}
 				}
 			}
+			// print(dragItem);
 
 			// Draw the hotbar inside the inventory menu
 			Vector2 hotbarSize = new Vector2(menuSize.x - (margin*2), menuSize.y * 3f/12);
@@ -237,6 +271,7 @@ public class Inventory : MonoBehaviour {
 				Vector2 itemLocation = new Vector2(itemsTopLeft.x + (i%horizontalShift)*(itemSize.x+margin), itemsTopLeft.y + verticalShift);
 				if (inv[hotbar[i]][0] != -1)
 				{
+					// itemSprites[hotbar[i]].pos = itemLocation;
 					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), inv[hotbar[i]][0].ToString()+","+inv[hotbar[i]][1].ToString()))
 					{
 						
@@ -255,7 +290,32 @@ public class Inventory : MonoBehaviour {
 		{
 			// Draw the hotbar
 			Vector2 hotbarSize = new Vector2(menuSize.x - (margin*2), menuSize.y * 1f/6);
-            GUI.Box(GuiClass.GetCenteredRect(new Vector2(screenCenter.x, Screen.height - hotbarSize.y/2 - margin), hotbarSize), "");			
+			Rect hotbarRect = GuiClass.GetCenteredRect(new Vector2(screenCenter.x, Screen.height - hotbarSize.y/2 - margin), hotbarSize);
+            GUI.Box(hotbarRect, "");
+
+			Vector2 itemsBound = new Vector2(hotbarSize.x - (margin*2) - itemSize.x, hotbarSize.y - (margin*2) - itemSize.y);
+			Vector2 itemsTopLeft = new Vector2(screenCenter.x - ((itemSize.x + margin) * HotBarSlots/2f) + (itemSize.x + margin)/2, hotbarRect.y + hotbarSize.y - margin - itemSize.y/2);
+			int horizontalShift = (int)(itemsBound.x / (itemSize.x+margin)) + 1;
+			for (int i = 0; i < hotbar.Count; i++)
+			{
+				float verticalShift = (itemSize.y+margin)*(int)((float)i/(horizontalShift));
+				Vector2 itemLocation = new Vector2(itemsTopLeft.x + (i%horizontalShift)*(itemSize.x+margin), itemsTopLeft.y + verticalShift);
+				if (inv[hotbar[i]][0] != -1)
+				{
+					itemSprites[hotbar[i]].pos = itemLocation;
+					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), inv[hotbar[i]][0].ToString()+","+inv[hotbar[i]][1].ToString()))
+					{
+						
+					}
+				}
+				else
+				{
+					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), ""))
+					{
+						
+					}
+				}
+			}
 		}
 	}
 }
