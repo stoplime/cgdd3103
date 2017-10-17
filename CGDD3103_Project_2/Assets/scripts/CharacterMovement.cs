@@ -73,7 +73,9 @@ public class CharacterMovement : MonoBehaviour {
 	public float RareProjectileProb;
 
 	private bool grounded = false;
-	Rigidbody rb;
+
+	private Rigidbody rb;
+
 	public float jumpForce = 5f;
 
 	public float Yaw
@@ -135,7 +137,8 @@ public class CharacterMovement : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		
+		rb.angularVelocity = Vector3.zero;
+
 		if (Input.GetKeyDown(keyProfile[Profile]["inventory"]))
 		{
 			Inventory inv = GetComponentsInParent<Inventory>()[0];

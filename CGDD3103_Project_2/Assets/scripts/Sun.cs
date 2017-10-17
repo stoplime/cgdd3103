@@ -20,7 +20,6 @@ public class Sun : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		time = 12;
 		transform.LookAt(target);
 		xOffset = transform.position.x;
 		sunRotation = new Vector2(transform.position.z, transform.position.y);

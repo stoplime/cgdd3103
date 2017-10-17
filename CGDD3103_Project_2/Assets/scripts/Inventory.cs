@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour {
 
+	public GUISkin guiSkin;
+
 	public bool OpenInventoryToggle;
 
 	public int HotBarSlots = 4;
@@ -100,6 +102,11 @@ public class Inventory : MonoBehaviour {
 		return false;
 	}
 
+	public void ItemDragTo(Vector2 pos)
+	{
+
+	}
+
 	private void InitStyles()
 	{
 		if( inventoryStyle == null )
@@ -124,6 +131,7 @@ public class Inventory : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		// GUI.skin = guiSkin;
 		OpenInventoryToggle = false;
 		inv = new List<List<int>>();
 		for (int i = 0; i < InternalVisibleSlots; i++)
@@ -191,7 +199,7 @@ public class Inventory : MonoBehaviour {
 				Vector2 itemLocation = new Vector2(itemsTopLeft.x + (i%horizontalShift)*(itemSize.x+margin), itemsTopLeft.y + verticalShift);
 				if (inv[i][0] != -1)
 				{
-					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), i.ToString()))
+					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), inv[i][0].ToString()+","+inv[i][1].ToString()))
 					{
 						
 					}
@@ -218,7 +226,7 @@ public class Inventory : MonoBehaviour {
 				Vector2 itemLocation = new Vector2(itemsTopLeft.x + (i%horizontalShift)*(itemSize.x+margin), itemsTopLeft.y + verticalShift);
 				if (inv[hotbar[i]][0] != -1)
 				{
-					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), i.ToString()))
+					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), inv[hotbar[i]][0].ToString()+","+inv[hotbar[i]][1].ToString()))
 					{
 						
 					}
