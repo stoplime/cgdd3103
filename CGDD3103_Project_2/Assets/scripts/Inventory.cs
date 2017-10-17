@@ -17,6 +17,8 @@ public class Inventory : MonoBehaviour {
 	/// </summary>
 	private List< List<int> > inv;
 
+	private List<Item> itemSprites;
+
 	private List<int> hotbar;
 
 	private Vector2 screenCenter;
@@ -32,6 +34,13 @@ public class Inventory : MonoBehaviour {
 		inv.Add(new List<int>());
 		inv[inv.Count-1].Add(-1); 	// default id of -1 for nothing
 		inv[inv.Count-1].Add(0);	// default count of items as 0
+	}
+
+	private void addItemSprite(int id)
+	{
+		Item clone = (Instantiate(Resources.Load("InventoryItems/GuiItem", typeof(GameObject))) as GameObject).GetComponent<Item>();
+		clone.id = id;
+		itemSprites.Add(clone);
 	}
 
 	public int getInvItemID(int index)
@@ -88,6 +97,7 @@ public class Inventory : MonoBehaviour {
 			if(inv[i][0] == -1){
 				inv[i][0] = ID;
 				inv[i][1] = 1;
+				// addItemSprite(ID);
 				return true;
 			}
 		}
@@ -97,6 +107,7 @@ public class Inventory : MonoBehaviour {
 			addEmptyInventory();
 			inv[inv.Count-1][0] = ID;
 			inv[inv.Count-1][0] = 1;
+			// addItemSprite(ID);
 			return true;
 		}
 		return false;
@@ -201,7 +212,7 @@ public class Inventory : MonoBehaviour {
 				{
 					if (GUI.Button(GuiClass.GetCenteredRect(itemLocation, itemSize), inv[i][0].ToString()+","+inv[i][1].ToString()))
 					{
-						
+						itemSprites[i].Drag();
 					}
 				}
 				else
