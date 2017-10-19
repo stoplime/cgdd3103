@@ -54,6 +54,10 @@ public class Enemy : MonoBehaviour {
 
 	private float timer;
 
+	private UnityEngine.AI.NavMeshAgent agent;
+
+	private Transform targetPlayer;
+
 	public void TakeDamage(float dmg)
 	{
 		Health = health - dmg;
@@ -85,10 +89,13 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		health = maxHealth;
+		agent = GetComponentInParent<UnityEngine.AI.NavMeshAgent>();
+		targetPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		agent.destination = targetPlayer.position;
 		timer -= Time.deltaTime;
 		if (timer <= 0)
 		{
