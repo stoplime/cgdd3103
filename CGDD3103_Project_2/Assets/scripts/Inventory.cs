@@ -36,13 +36,14 @@ public class Inventory : MonoBehaviour {
 		inv.Add(new List<int>());
 		inv[inv.Count-1].Add(-1); 	// default id of -1 for nothing
 		inv[inv.Count-1].Add(0);	// default count of items as 0
+		itemSprites.Add((Instantiate(Resources.Load("InventoryItems/EmptyGuiItem", typeof(GameObject))) as GameObject).GetComponent<Item>());
 	}
 
 	private void addItemSprite(int id)
 	{
 		Item clone = (Instantiate(Resources.Load("InventoryItems/GuiItem", typeof(GameObject))) as GameObject).GetComponent<Item>();
 		clone.id = id;
-		itemSprites.Add(clone);
+		itemSprites[id] = clone;
 	}
 
 	public int getInvItemID(int index)
@@ -115,9 +116,15 @@ public class Inventory : MonoBehaviour {
 		return false;
 	}
 
-	public void ItemDragTo(Vector2 pos)
+	public void SwapItems(int item1, int item2)
 	{
+		List<int> temp = inv[item1];
+		inv[item1] = inv[item2];
+		inv[item2] = temp;
 
+		Item tempI = itemSprites[item1];
+		itemSprites[item1] = itemSprites[item2];
+		itemSprites[item2] = tempI;
 	}
 
 	private void InitStyles()
@@ -147,6 +154,7 @@ public class Inventory : MonoBehaviour {
 		// GUI.skin = guiSkin;
 		OpenInventoryToggle = false;
 		inv = new List<List<int>>();
+		itemSprites = new List<Item>();
 		for (int i = 0; i < InternalVisibleSlots; i++)
 		{
 			addEmptyInventory();
@@ -158,7 +166,6 @@ public class Inventory : MonoBehaviour {
 		{
 			hotbar.Add(i); // The index of an inventory slot
 		}
-		itemSprites = new List<Item>();
 	}
 	
 	// Update is called once per frame
@@ -166,12 +173,6 @@ public class Inventory : MonoBehaviour {
         // Update the GUI sizes if the screen were to resize
         screenCenter = new Vector2(Screen.width/2, Screen.height/2);
         menuSize = new Vector2(Screen.width * 4/5, Screen.height * 4/5);
-
-		// toggle the Inventory menu
-        // if (Input.GetKeyDown(KeyCode.E))
-        // {
-        //     OpenInventoryToggle = !OpenInventoryToggle;
-        // }
 
 		// closes the menu if the main menu is open
 		if (GuiClass.Controls)
@@ -206,10 +207,18 @@ public class Inventory : MonoBehaviour {
 			Vector2 itemsBound = new Vector2(internalInventorySize.x - (margin*2) - itemSize.x, internalInventorySize.y - (margin*2) - itemSize.y);
 			Vector2 itemsTopLeft = new Vector2(internalInventoryRect.x + margin + itemSize.x/2, internalInventoryRect.y + margin + itemSize.y/2);
 			int horizontalShift = (int)(itemsBound.x / (itemSize.x+margin)) + 1;
+
+			int droppedItem = -1;
+			Vector2 mouseDrop = Vector2.zero;
 			// print(horizontalShift);
 			if (!Input.GetKey(KeyCode.Mouse0))
 			{
-				dragItem = -1;
+				if (dragItem != -1)
+				{
+					droppedItem = dragItem;
+					dragItem = -1;
+					mouseDrop = new Vector2(Input.mousePosition.x, Screen.height-Input.mousePosition.y);
+				}
 			}
 			for (int i = 0; i < inv.Count; i++)
 			{
@@ -223,6 +232,11 @@ public class Inventory : MonoBehaviour {
 				if(buttonRect.Contains(mousePos) && Input.GetKey(KeyCode.Mouse0) && dragItem == -1)
 				{
 					dragItem = i;
+				}
+
+				if (droppedItem != -1 && buttonRect.Contains(mouseDrop))
+				{
+					SwapItems(i, droppedItem);
 				}
 
 				// checks if item exists
@@ -315,6 +329,13 @@ public class Inventory : MonoBehaviour {
 						
 					}
 				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < itemSprites.Count; i++)
+			{
+				itemSprites[i].pos = new Vector2(-itemSprites[i].size.x, -itemSprites[i].size.y);
 			}
 		}
 	}
