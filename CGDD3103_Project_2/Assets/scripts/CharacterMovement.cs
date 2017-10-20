@@ -141,7 +141,7 @@ public class CharacterMovement : MonoBehaviour {
 
 		if (Input.GetKeyDown(keyProfile[Profile]["inventory"]))
 		{
-			InventoryControl inv = GetComponentsInParent<InventoryControl>()[0];
+			InventoryControl inv = GetComponentInParent<InventoryControl>();
 			inv.OpenInventoryToggle = !inv.OpenInventoryToggle;
 		}
 
@@ -187,19 +187,25 @@ public class CharacterMovement : MonoBehaviour {
 			// firing action
 			if (Input.GetKeyDown(keyProfile[Profile]["fire"]))
 			{
-				Rigidbody clone;
-				if (RareProjectileProb < Random.value)
+				Rigidbody clone = null;
+				InventoryControl inventory = GetComponentInParent<InventoryControl>();
+				if (inventory.getHotbarItemID(0) == 0)
 				{
 					clone = Instantiate(projectile, transform.position + Camera.main.transform.forward * 1.5f, Camera.main.transform.rotation) as Rigidbody;
+					inventory.removeOneHotbarItem(0);
 				}
-				else
+				else if (inventory.getHotbarItemID(0) == 1)
 				{
 					clone = Instantiate(projectile2, transform.position + Camera.main.transform.forward * 1.5f, Camera.main.transform.rotation) as Rigidbody;
+					inventory.removeOneHotbarItem(0);
 				}
-				clone.transform.rotation = Camera.main.transform.rotation;
-				clone.transform.Rotate(90, 0, 0);
-				// clone.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * projectileSpeed);
-				clone.velocity = Camera.main.transform.forward * projectileSpeed;
+				if (clone != null)
+				{
+					clone.transform.rotation = Camera.main.transform.rotation;
+					clone.transform.Rotate(90, 0, 0);
+					// clone.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * projectileSpeed);
+					clone.velocity = Camera.main.transform.forward * projectileSpeed;
+				}
 			}
 
 			timer -= Time.deltaTime;

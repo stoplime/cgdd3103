@@ -6,6 +6,8 @@ public class DropItem : MonoBehaviour {
 
 	public int id;
 
+	public int amount = 1;
+
 	public float animationSpeed = 100;
 
 	private Rigidbody rb;
@@ -19,16 +21,16 @@ public class DropItem : MonoBehaviour {
 	{
 		if (other.collider.tag == "Player")
 		{
-			if(other.gameObject.GetComponent<InventoryControl>().setInvItem(id))
+			if(other.gameObject.GetComponent<InventoryControl>().addInvItem(id, amount))
 			{
 				Destroy(gameObject);
 			}
+			else
+			{
+				other.gameObject.GetComponent<InventoryControl>().InventoryFullFlag = true;
+			}
 		}
-		else if (other.collider.tag == "Ground" || other.collider.tag == "Obstacle")
-		{
-			
-		}
-		else
+		if (!(other.collider.tag == "Ground" || other.collider.tag == "Obstacle"))
 		{
 			Physics.IgnoreCollision(other.collider, GetComponent<Collider>());
 		}

@@ -52,12 +52,18 @@ public class InventoryControl : MonoBehaviour {
 
     public int HotbarSize = 4;
 
+    public int MaxStack = 64;
+
     public int Margin = 15;
 
-    public List<Rect> GuiBoxes;
-    public List<Rect> ItemBoxes;
-    public List<Rect> HotbarInBoxes;
-    public List<Rect> HotbarOutBoxes;
+    public Vector2 ItemTextSize = new Vector2(20, 20);
+
+    public bool InventoryFullFlag = false;
+
+    private List<Rect> GuiBoxes;
+    private List<Rect> ItemBoxes;
+    private List<Rect> HotbarInBoxes;
+    private List<Rect> HotbarOutBoxes;
 
     private List<InventoryItem> inventory;
 
@@ -75,6 +81,8 @@ public class InventoryControl : MonoBehaviour {
     private Resolution res;
 
     private bool preMenuOpen;
+
+    private float InventoryFullTimer = 2;
 
     public void InitInventory(){
         inventory = new List<InventoryItem> ();
@@ -294,6 +302,7 @@ public class InventoryControl : MonoBehaviour {
     /// </summary>
     void OnGUI()
     {
+        InventoryFullNotification();
         if(OpenInventoryToggle)
 		{
             // Overall inventory menu box
@@ -318,6 +327,8 @@ public class InventoryControl : MonoBehaviour {
                     GUI.depth = -2;
                 }
                 GUI.DrawTexture(GuiClass.GetCenteredRect(GetItemSpritePos(false)[i], ItemSize), inventory[i].Sprite, ScaleMode.StretchToFill, true, 10.0F, Color.white, 0, 1);
+                GUI.depth--;
+                GUI.Label(GetItemTextRect(GetItemBoxes(false)[i]), inventory[i].Count.ToString());
                 GUI.depth = 0;
             }
 
@@ -334,6 +345,8 @@ public class InventoryControl : MonoBehaviour {
                     GUI.depth = -2;
                 }
                 GUI.DrawTexture(GuiClass.GetCenteredRect(GetHotbarSpritePos(false)[i], ItemSize), inventory[hotbar[i]].Sprite, ScaleMode.StretchToFill, true, 10.0F, Color.white, 0, 1);
+                GUI.depth--;
+                GUI.Label(GetItemTextRect(GetHotbarInBoxes(false)[i]), inventory[hotbar[i]].Count.ToString());
                 GUI.depth = 0;
             }
         }
@@ -352,6 +365,8 @@ public class InventoryControl : MonoBehaviour {
                 // Draw item icons
                 GUI.depth = -1;
                 GUI.DrawTexture(GuiClass.GetCenteredRect(GetHotbarSpritePos(false)[i], ItemSize), inventory[hotbar[i]].Sprite, ScaleMode.StretchToFill, true, 10.0F, Color.white, 0, 1);
+                GUI.depth--;
+                GUI.Label(GetItemTextRect(GetHotbarOutBoxes(false)[i]), inventory[hotbar[i]].Count.ToString());
                 GUI.depth = 0;
             }
         }
@@ -377,6 +392,33 @@ public class InventoryControl : MonoBehaviour {
             GetHotbarSpritePos(true);
         }
     }
+
+    public void InventoryFullNotification() {
+        if (InventoryFullFlag)
+        {
+            InventoryFullTimer -= Time.deltaTime;
+            GUIStyle fontStyle = new GUIStyle();
+            fontStyle.fontSize = 24;
+            // Color tempColor = GUI.color;
+            Color textColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+            textColor.a = Mathf.Lerp(0f, 1f, InventoryFullTimer/2);
+            fontStyle.normal.textColor = textColor;
+            // GUI.color = textColor;
+            Vector2 screenCenter = new Vector2(Screen.width/2, Screen.height/2);
+            Vector2 notificationSize = new Vector2(Screen.width * 1/4, Screen.height * 1/6);
+            GUI.Label(GuiClass.GetCenteredRect(screenCenter, notificationSize), "Inventory Is Full!", fontStyle);
+            // GUI.color = tempColor;
+        }
+        if (InventoryFullTimer <= 0)
+        {
+            InventoryFullFlag = false;
+            InventoryFullTimer = 2;
+        }
+    }
+
+    public int getHotbarItemID(int index) {
+		return getInvItemID(hotbar[index]);
+	}
     
     public int getInvItemID(int index) {
 		if(index < inventory.Count && index >= 0)
@@ -388,7 +430,11 @@ public class InventoryControl : MonoBehaviour {
 		return -1;
 	}
 
-	public int removeInvItem(int index) {
+    public int removeOneHotbarItem(int index) {
+		return removeOneInvItem(hotbar[index]);
+	}
+
+	public int removeOneInvItem(int index) {
 		if(index < inventory.Count && index >= 0)
 		{
 			if(inventory[index].Count > 0){
@@ -402,6 +448,13 @@ public class InventoryControl : MonoBehaviour {
                     if (inventory.Count > VisibleInventorySize)
                     {
                         inventory.RemoveAt(index);
+                        for (int i = 0; i < hotbar.Count; i++)
+                        {
+                            if (hotbar[i] == index)
+                            {
+                                hotbar[i] = i;
+                            }
+                        }
                     }
                     else
                     {
@@ -415,37 +468,97 @@ public class InventoryControl : MonoBehaviour {
 		return -1;
 	}
 
-	public bool setInvItem(int ID) {
-		// Check for existing inventory entry
-		for (int i = 0; i < inventory.Count; i++)
-		{
-			if(inventory[i].Id == ID){
-				if (inventory[i].Count > 0 && inventory[i].Count < 64)
-				{
-					inventory[i].Count++;
-					return true;
-				}
-			}
-		}
-		// Check for empty slots in inventory
-		for (int i = 0; i < inventory.Count; i++)
-		{
-			if(inventory[i].Id == -1){
-				inventory[i].Id = ID;
-				inventory[i].Count = 1;
-				return true;
-			}
-		}
-		// Check to expand inventory
-		if (inventory.Count < MaxInventorySize)
-		{
-			inventory.Add(new InventoryItem());
-			inventory[inventory.Count-1].Id = ID;
-			inventory[inventory.Count-1].Count = 1;
-			return true;
-		}
-		return false;
+	public bool addOneInvItem(int ID) {
+        return addInvItem(ID, 1);
 	}
+
+    public bool addInvItem(int ID, int amount) {
+        int prevAmount = amount;
+        while (amount > 0)
+        {
+            prevAmount = amount;
+            // Check for existing inventory entry
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                if(inventory[i].Id == ID){
+                    if (inventory[i].Count > 0 && inventory[i].Count < MaxStack)
+                    {
+                        int difference = MaxStack - inventory[i].Count;
+                        if (difference >= amount)
+                        {
+                            inventory[i].Count += amount;
+                            amount = 0;
+                        }
+                        else
+                        {
+                            inventory[i].Count = MaxStack;
+                            amount -= difference;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (prevAmount == amount)
+            {
+                break;
+            }
+        }
+        while (amount > 0)
+        {
+            prevAmount = amount;
+            // Check for empty slots in inventory
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                if(inventory[i].Id == -1){
+                    inventory[i].Id = ID;
+                    if (amount <= MaxStack)
+                    {
+                        inventory[i].Count = amount;
+                        amount = 0;
+                    }
+                    else
+                    {
+                        inventory[i].Count = MaxStack;
+                        amount -= MaxStack;
+                    }
+                    break;
+                }
+            }
+            if (prevAmount == amount)
+            {
+                break;
+            }
+        }
+        while (amount > 0)
+        {
+            prevAmount = amount;
+            // Check to expand inventory
+            if (inventory.Count < MaxInventorySize)
+            {
+                inventory.Add(new InventoryItem());
+                inventory[inventory.Count-1].Id = ID;
+                if (amount <= MaxStack)
+                {
+                    inventory[inventory.Count-1].Count = amount;
+                    amount = 0;
+                }
+                else
+                {
+                    inventory[inventory.Count-1].Count = MaxStack;
+                    amount -= MaxStack;
+                }
+            }
+            if (prevAmount == amount)
+            {
+                break;
+            }
+        }
+        if (amount == 0)
+        {
+            return true;
+        }
+		return false;
+    }
 
 	public void SwapItems(int item1, int item2) {
 		InventoryItem temp = inventory[item1];
@@ -635,5 +748,10 @@ public class InventoryControl : MonoBehaviour {
             }
             return HotbarSpritePos;
         }
+    }
+
+    private Rect GetItemTextRect(Rect item) {
+        Vector2 textPos = new Vector2(item.xMax - ItemTextSize.x, item.yMax - ItemTextSize.y);
+        return new Rect(textPos, ItemTextSize);
     }
 }
