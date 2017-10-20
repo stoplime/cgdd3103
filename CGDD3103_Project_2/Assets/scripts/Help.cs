@@ -6,6 +6,8 @@ public static class Help {
 
 	public static bool isPause;
 
+    public static List<Texture> ItemVocabulary;
+
 	/// <summary>
 	/// float version of PI.
 	/// </summary>

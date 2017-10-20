@@ -19,10 +19,18 @@ public class DropItem : MonoBehaviour {
 	{
 		if (other.collider.tag == "Player")
 		{
-			if(other.gameObject.GetComponent<Inventory>().setInvItem(id))
+			if(other.gameObject.GetComponent<InventoryControl>().setInvItem(id))
 			{
 				Destroy(gameObject);
 			}
+		}
+		else if (other.collider.tag == "Ground" || other.collider.tag == "Obstacle")
+		{
+			
+		}
+		else
+		{
+			Physics.IgnoreCollision(other.collider, GetComponent<Collider>());
 		}
 	}
 

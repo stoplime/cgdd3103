@@ -95,7 +95,7 @@ public class Enemy : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		agent.destination = targetPlayer.position;
+		agent.SetDestination(targetPlayer.position);
 		timer -= Time.deltaTime;
 		if (timer <= 0)
 		{

@@ -141,7 +141,7 @@ public class CharacterMovement : MonoBehaviour {
 
 		if (Input.GetKeyDown(keyProfile[Profile]["inventory"]))
 		{
-			Inventory inv = GetComponentsInParent<Inventory>()[0];
+			InventoryControl inv = GetComponentsInParent<InventoryControl>()[0];
 			inv.OpenInventoryToggle = !inv.OpenInventoryToggle;
 		}
 

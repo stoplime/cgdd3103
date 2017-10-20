@@ -128,11 +128,11 @@ public class GuiClass : MonoBehaviour {
 	void OnGUI () {
         
         // Top left Health and menu
-        GUI.Box(new Rect(10,10,100,90), "Health");
-        GUI.Label(new Rect(20,40,80,20), "HP: " + mainCharacterScript.health.ToString() + "/" + mainCharacterScript.maxHealth.ToString());
+        GUI.Box(new Rect(10,10,120,90), "Health");
+        GUI.Label(new Rect(20,40,100,20), "HP: " + mainCharacterScript.health.ToString() + "/" + mainCharacterScript.maxHealth.ToString());
 
         // toggle controls menu
-        if(GUI.Button(new Rect(20,70,80,20), "Controls")) {
+        if(GUI.Button(new Rect(20,70,100,20), "Controls (ESC)")) {
             Controls = !Controls;
         }
 
