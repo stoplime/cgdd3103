@@ -78,6 +78,8 @@ public class CharacterMovement : MonoBehaviour {
 
 	public float jumpForce = 5f;
 
+	private InventoryControl inventory;
+
 	public float Yaw
 	{
 		get
@@ -87,6 +89,26 @@ public class CharacterMovement : MonoBehaviour {
 		set
 		{
 			yaw = Help.angleClamp(value, true);
+		}
+	}
+
+	public void HotbarSelect()
+	{
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+		{
+			inventory.SelectedHotbar = 0;
+		}
+		else if (Input.GetKeyDown(KeyCode.Alpha2))
+		{
+			inventory.SelectedHotbar = 1;
+		}
+		else if (Input.GetKeyDown(KeyCode.Alpha3))
+		{
+			inventory.SelectedHotbar = 2;
+		}
+		else if (Input.GetKeyDown(KeyCode.Alpha4))
+		{
+			inventory.SelectedHotbar = 3;
 		}
 	}
 
@@ -134,6 +156,7 @@ public class CharacterMovement : MonoBehaviour {
 		keyProfile[0] = GameManager.DefaultKeyConfig1;
 		keyProfile[1] = GameManager.DefaultKeyConfig2;
 		rb = GetComponent<Rigidbody>();
+		inventory = GetComponentInParent<InventoryControl>();
 	}
 	// Update is called once per frame
 	void Update () {
@@ -141,8 +164,7 @@ public class CharacterMovement : MonoBehaviour {
 
 		if (Input.GetKeyDown(keyProfile[Profile]["inventory"]))
 		{
-			InventoryControl inv = GetComponentInParent<InventoryControl>();
-			inv.OpenInventoryToggle = !inv.OpenInventoryToggle;
+			inventory.OpenInventoryToggle = !inventory.OpenInventoryToggle;
 		}
 
 		if (!Help.isPause)
@@ -188,16 +210,16 @@ public class CharacterMovement : MonoBehaviour {
 			if (Input.GetKeyDown(keyProfile[Profile]["fire"]))
 			{
 				Rigidbody clone = null;
-				InventoryControl inventory = GetComponentInParent<InventoryControl>();
-				if (inventory.getHotbarItemID(0) == 0)
+				
+				if (inventory.getHotbarItemID(inventory.SelectedHotbar) == 0)
 				{
 					clone = Instantiate(projectile, transform.position + Camera.main.transform.forward * 1.5f, Camera.main.transform.rotation) as Rigidbody;
-					inventory.removeOneHotbarItem(0);
+					inventory.removeOneHotbarItem(inventory.SelectedHotbar);
 				}
-				else if (inventory.getHotbarItemID(0) == 1)
+				else if (inventory.getHotbarItemID(inventory.SelectedHotbar) == 1)
 				{
 					clone = Instantiate(projectile2, transform.position + Camera.main.transform.forward * 1.5f, Camera.main.transform.rotation) as Rigidbody;
-					inventory.removeOneHotbarItem(0);
+					inventory.removeOneHotbarItem(inventory.SelectedHotbar);
 				}
 				if (clone != null)
 				{
@@ -207,6 +229,8 @@ public class CharacterMovement : MonoBehaviour {
 					clone.velocity = Camera.main.transform.forward * projectileSpeed;
 				}
 			}
+
+			HotbarSelect();
 
 			timer -= Time.deltaTime;
 			if (health < maxHealth)

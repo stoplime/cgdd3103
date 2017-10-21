@@ -60,6 +60,8 @@ public class InventoryControl : MonoBehaviour {
 
     public bool InventoryFullFlag = false;
 
+    public int SelectedHotbar;
+
     private List<Rect> GuiBoxes;
     private List<Rect> ItemBoxes;
     private List<Rect> HotbarInBoxes;
@@ -131,6 +133,8 @@ public class InventoryControl : MonoBehaviour {
 
         res = Screen.currentResolution;
         preMenuOpen = OpenInventoryToggle;
+
+        SelectedHotbar = 0;
     }
 
     /// <summary>
@@ -358,6 +362,15 @@ public class InventoryControl : MonoBehaviour {
             // Internal Hotbar slots
             for (int i = 0; i < GetHotbarOutBoxes(false).Count; i++)
             {
+                if (SelectedHotbar == i)
+                {
+                    // draw highlight
+                    Rect largerRect = GetHotbarOutBoxes(false)[i];
+                    largerRect.size += new Vector2(Margin, Margin);
+                    largerRect.x -= Margin/2f;
+                    largerRect.y -= Margin/2f;
+                    GUI.Box(largerRect, "");
+                }
                 if (GUI.Button(GetHotbarOutBoxes(false)[i], ""))
                 {
                     
