@@ -1,0 +1,36 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CameraMovement : MonoBehaviour {
+
+
+    public float cameraSpeedV = 2.0f;
+    public float pitch = 0.0f;
+	private float yaw = 0.0f;
+
+	// Use this for initialization
+	void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		CharacterMovement parent = gameObject.GetComponentInParent<CharacterMovement>();
+		if (parent != null){
+			yaw = parent.Yaw;
+		}
+		if (!Help.isPause)
+		{
+			pitch -= cameraSpeedV * Input.GetAxis("Mouse Y");
+			if(pitch > 90){
+				pitch = 90;
+			}
+			else if (pitch < -90)
+			{
+				pitch = -90;
+			}
+			transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
+		}
+	}
+}
