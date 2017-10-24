@@ -113,6 +113,16 @@ public class InventoryControl : MonoBehaviour {
         Help.ItemVocabulary.Add(Resources.Load("ItemTextures/item_m18_smoke")        as Texture);
     }
 
+    public int GetSelectedHotbarId()
+    {
+        return getHotbarItemID(SelectedHotbar);
+    }
+    
+    public void RemoveOneSelectedHotbarId()
+    {
+        removeOneHotbarItem(SelectedHotbar);
+    }
+
     /// <summary>
     /// Called when the script is loaded or a value is changed in the
     /// inspector (Called in the editor only).

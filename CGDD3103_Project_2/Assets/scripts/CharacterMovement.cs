@@ -211,15 +211,15 @@ public class CharacterMovement : MonoBehaviour {
 			{
 				Rigidbody clone = null;
 				
-				if (inventory.getHotbarItemID(inventory.SelectedHotbar) == 0)
+				if (inventory.GetSelectedHotbarId() == 0)
 				{
 					clone = Instantiate(projectile, transform.position + Camera.main.transform.forward * 1.5f, Camera.main.transform.rotation) as Rigidbody;
-					inventory.removeOneHotbarItem(inventory.SelectedHotbar);
+					inventory.RemoveOneSelectedHotbarId();
 				}
-				else if (inventory.getHotbarItemID(inventory.SelectedHotbar) == 1)
+				else if (inventory.GetSelectedHotbarId() == 6)
 				{
 					clone = Instantiate(projectile2, transform.position + Camera.main.transform.forward * 1.5f, Camera.main.transform.rotation) as Rigidbody;
-					inventory.removeOneHotbarItem(inventory.SelectedHotbar);
+					inventory.RemoveOneSelectedHotbarId();
 				}
 				if (clone != null)
 				{
@@ -227,6 +227,30 @@ public class CharacterMovement : MonoBehaviour {
 					clone.transform.Rotate(90, 0, 0);
 					// clone.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * projectileSpeed);
 					clone.velocity = Camera.main.transform.forward * projectileSpeed;
+				}
+			}
+
+			// Mouse right click for health postions
+			if (Input.GetKeyDown(KeyCode.Mouse1))
+			{
+				if (inventory.GetSelectedHotbarId() == 3)
+				{
+					//healing potion 1
+					Health = health + 10;
+					inventory.RemoveOneSelectedHotbarId();
+				}
+				if (inventory.GetSelectedHotbarId() == 1)
+				{
+					//healing potion 2
+					Health = health + 50;
+					inventory.RemoveOneSelectedHotbarId();
+				}
+				if (inventory.GetSelectedHotbarId() == 2)
+				{
+					//healing potion 3
+					maxHealth += 10;
+					Health = health + 10;
+					inventory.RemoveOneSelectedHotbarId();
 				}
 			}
 
