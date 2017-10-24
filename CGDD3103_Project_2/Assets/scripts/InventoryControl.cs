@@ -699,7 +699,7 @@ public class InventoryControl : MonoBehaviour {
         HotbarOutBoxes = new List<Rect>();
 
         Vector2 itemsBound = new Vector2(GuiBoxes[3].size.x - (Margin*2) - ItemSize.x, GuiBoxes[3].size.y - (Margin*2) - ItemSize.y);
-        Vector2 itemsTopLeft = new Vector2(GuiBoxes[3].center.x - ((ItemSize.x + Margin) * HotbarSize/2f) + (ItemSize.x + Margin)/2, GuiBoxes[3].y + GuiBoxes[3].size.y - Margin - ItemSize.y/2);
+        Vector2 itemsTopLeft = new Vector2(GuiBoxes[3].center.x - ((ItemSize.x + Margin) * HotbarSize/2f) + (ItemSize.x + Margin)/2, GuiBoxes[3].y + GuiBoxes[3].size.y - (Margin + ItemSize.y)/2);
         int horizontalShift = (int)(itemsBound.x / (ItemSize.x+Margin)) + 1;
         for (int i = 0; i < hotbar.Count; i++)
         {

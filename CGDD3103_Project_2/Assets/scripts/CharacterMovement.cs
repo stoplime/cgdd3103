@@ -70,6 +70,8 @@ public class CharacterMovement : MonoBehaviour {
 
     public Rigidbody projectile2;
 
+    public Rigidbody projectile3;
+
 	public float RareProjectileProb;
 
 	private bool grounded = false;
@@ -219,6 +221,11 @@ public class CharacterMovement : MonoBehaviour {
 				else if (inventory.GetSelectedHotbarId() == 6)
 				{
 					clone = Instantiate(projectile2, transform.position + Camera.main.transform.forward * 1.5f, Camera.main.transform.rotation) as Rigidbody;
+					inventory.RemoveOneSelectedHotbarId();
+				}
+				else if (inventory.GetSelectedHotbarId() == 8)
+				{
+					clone = Instantiate(projectile3, transform.position + Camera.main.transform.forward * 1.5f, Camera.main.transform.rotation) as Rigidbody;
 					inventory.RemoveOneSelectedHotbarId();
 				}
 				if (clone != null)

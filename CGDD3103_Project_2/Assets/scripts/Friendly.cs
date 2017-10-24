@@ -87,9 +87,10 @@ public class Friendly : MonoBehaviour {
 				break;
 			}
 			// if too far from the player, needs to go back to the player
-			if (Vector3.Distance(transform.position, playerTransform.position) > followRadius)
+			if (Vector3.Distance(transform.position, playerTransform.position) > followRadius*2f)
 			{
 				current_state = FriendlyAIstate.Follow;
+				target = playerTransform;
 				break;
 			}
 			// Attack the enemy
